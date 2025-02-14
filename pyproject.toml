@@ -13,8 +13,6 @@ keywords = []
 license = {text = "GPLv2"}
 dependencies = [
     "numpy>=2.0.0",
-    "platformdirs",
-    "customtkinter"
 ]
 
 [build-system]

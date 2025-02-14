@@ -16,6 +16,5 @@ __pycache__
 .python-version
 wheelhouse
 CTimeTag
-opt
 ./src/logicallyUQD/_lib.cpp
 ./src/logicallyUQD/_lib.c
