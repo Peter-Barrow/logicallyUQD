@@ -41,7 +41,7 @@ The contents of the Linux, Win32 and Win64 may differ but this is not important 
 2. Ensure that the following are installed:
     1. Python
     2. libusb (libusb1 specifically), included the development headers
-    3. libtimetag32 for 32bit Linux or libtimetag64 for 64bit Linux is installed, this should be in `/lib/` or `lib64` respectively.
+    3. libtimetag32 for 32bit Linux or libtimetag64 for 64bit Linux is installed, this should be in `/lib` or `/lib64` respectively.
     4. (Optionally) Make, this should be installed by default
 
 3. Build the library:
