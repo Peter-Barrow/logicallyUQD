@@ -23,7 +23,6 @@ Exports the functionality of the `CTimeTag` and `CLogic` headers distributed by 
           │   ├── Include
           │   │   ├── CLogic.h
           │   │   ├── CTimeTag.h
-          │   │   └── CTimeTag.h.bak
           │   ├── Linux
           │   │   ├── libtimetag32.so
           │   │   ├── libtimetag64.so
