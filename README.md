@@ -10,24 +10,31 @@ Exports the functionality of the `CTimeTag` and `CLogic` headers distributed by 
 
 1. Copy the *entire* "CTimeTag" directory from the zip file UQD distribute into `logicallyUQD/opt`, you must have the following structure:
 ```sh
-logicallyUQD
-    └── opt
-        ├── CTimeTag
-        │   ├── Include
-        │   │   ├── CLogic.h
-        │   │   ├── CTimeTag.h
-        │   │   └── CTimeTag.h.bak
-        │   ├── Linux
-        │   │   ├── libtimetag32.so
-        │   │   ├── libtimetag64.so
-        │   │   └── libtimetagARM.so
-        │   ├── Win32
-        │   │   ├── CTimeTagLibDebug.lib
-        │   │   └── CTimeTagLib.lib
-        │   └── Win64
-        │       ├── CTimeTagLibDebug.lib
-        │       └── CTimeTagLib.lib
-        └── README.md <- you are here
+./
+├── pyproject.toml
+├── README.md
+├── ruff.toml
+├── setup.py
+├── LICENSE
+├── Makefile
+└── logicallyUQD
+      └── opt
+          ├── CTimeTag
+          │   ├── Include
+          │   │   ├── CLogic.h
+          │   │   ├── CTimeTag.h
+          │   │   └── CTimeTag.h.bak
+          │   ├── Linux
+          │   │   ├── libtimetag32.so
+          │   │   ├── libtimetag64.so
+          │   │   └── libtimetagARM.so
+          │   ├── Win32
+          │   │   ├── CTimeTagLibDebug.lib
+          │   │   └── CTimeTagLib.lib
+          │   └── Win64
+          │       ├── CTimeTagLibDebug.lib
+          │       └── CTimeTagLib.lib
+          └── README.md
 ```
 The contents of the Linux, Win32 and Win64 may differ but this is not important for us.
 
