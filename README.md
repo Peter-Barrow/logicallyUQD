@@ -57,3 +57,18 @@ The contents of the Linux, Win32 and Win64 may differ but this is not important 
     python3 -m pip install ./dist/logicallyUQD*.whl
     ```
 
+## Example
+``` python
+from logicallyUQD import UQDLogic16, LogicMode
+
+uqd = UQDLogic16() # Open a connectio to the timetagger
+logic_mode = LogicMode(uqd) # Activate logic mode
+
+# Logic mode activities...
+
+logic_mode.switch_logic_mode() # Deactivate logic mode to use timetag mode again
+
+# Timetag mode activities
+
+
+```
