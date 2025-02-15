@@ -1,4 +1,4 @@
-# logically-uqd
+# logicallyUQD
 
 >> Get the features of the UQD into Python, logically...
 
