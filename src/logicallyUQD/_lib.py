@@ -8,6 +8,13 @@ from cython.cimports.libc.stdint import uint32_t as u32
 from cython.cimports.libc.stdint import uint64_t as u64
 from numpy import ndarray, zeros, uint8, uint64, float64
 
+from cython.cimports.numpy import (
+    PyArray_SimpleNewFromData,
+    npy_intp,
+    NPY_UINT8,
+    NPY_INT64,
+)
+
 # from cython.cimports import _tangy
 
 
@@ -346,7 +353,7 @@ class UQDLogic16:
         _lib.CTimeTag_stopTimetags(self._c_timetag)
 
     @cython.ccall
-    def read_tags(self) -> Tuple[int, List[uint8], List[uint64]]:
+    def read_tags_naive(self) -> Tuple[int, List[uint8], List[uint64]]:
         count: int = _lib.CTimeTag_readTags(
             self._c_timetag, self._channel_ptr, self._timetag_ptr
         )
@@ -363,6 +370,65 @@ class UQDLogic16:
             timetag_view[i] = timetag_arr[i]
 
         return (count, channel_arr, timetag_arr)
+
+    @cython.ccall
+    def read_tags_nummpy(self) -> Tuple[int, List[uint8], List[uint64]]:
+        """
+        Write tags directly into buffer
+        """
+        count: int = _lib.CTimeTag_readTags(
+            self._c_timetag, self._channel_ptr, self._timetag_ptr
+        )
+        count = 0
+
+        if count == 0:
+            return count
+
+        # shape: npy_intp[:] = zeros(1, dtype=uint64)
+        shape: npy_intp[1] = [count]
+        # shape[0] = count
+
+        channels = PyArray_SimpleNewFromData(
+            1, cython.address(shape[0]), NPY_UINT8, self._channel_ptr
+        )
+
+        timestamps = PyArray_SimpleNewFromData(
+            1, cython.address(shape[0]), NPY_INT64, self._timetag_ptr
+        )
+
+        return (count, channels, timestamps)
+
+    @cython.ccall
+    def read_tags_print(self, n_print: int = 10):
+        """
+        Write tags directly into buffer
+        """
+        count: int = _lib.CTimeTag_readTags(
+            self._c_timetag, self._channel_ptr, self._timetag_ptr
+        )
+        count = 0
+
+        if count == 0:
+            return
+
+        # shape: npy_intp[:] = zeros(1, dtype=uint64)
+        shape: npy_intp[1] = [count]
+        # shape[0] = count
+
+        channels = PyArray_SimpleNewFromData(
+            1, cython.address(shape[0]), NPY_UINT8, self._channel_ptr
+        )
+
+        timestamps = PyArray_SimpleNewFromData(
+            1, cython.address(shape[0]), NPY_INT64, self._timetag_ptr
+        )
+
+        n: int = n_print
+        if count < n_print:
+            n = count
+
+        for i in range(n):
+            print(f'Ch[\t{channels[i]}]\t@\t{timestamps[i]}')
 
     @property
     def filter_min_count(self) -> int:
