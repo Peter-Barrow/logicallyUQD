@@ -372,7 +372,7 @@ class UQDLogic16:
         return (count, channel_arr, timetag_arr)
 
     @cython.ccall
-    def read_tags_nummpy(self) -> Tuple[int, List[uint8], List[uint64]]:
+    def read_tags_numpy(self) -> Tuple[int, List[uint8], List[uint64]]:
         """
         Write tags directly into buffer
         """
