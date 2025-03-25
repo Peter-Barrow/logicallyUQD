@@ -68,10 +68,6 @@ cdef extern from "./bindings_uqd_logic.h":
         c_ChannelType** channel_ret,
         c_TimeType** time_ret)
 
-    void CTimeTag_printTags(        CTimeTag_ptr timetag,
-        c_ChannelType* channel_ret,
-        c_TimeType* time_ret)
-
     CLogic_ptr CLogic_create(CTimeTag_ptr timetag)
 
     void CLogic_switchLogicMode(CLogic_ptr logic)

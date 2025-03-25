@@ -540,3 +540,25 @@ class LogicMode:
 
     def set_output_event_count(self, events: int):
         _lib.CLogic_setOutputEventCount(self._c_logic, events)
+
+
+@cython.ccall
+def pattern_from_channels(input_channels: List[int]) -> int:
+    """
+    Calculate a bitmask for TCSPC device based on input channels.
+
+    Args:
+        input_channels: List of integers representing channel numbers
+
+    Returns:
+        Integer representing the pattern (bitmask) where each bit corresponds
+            to an input channel
+    """
+    pattern = 0
+
+    for channel in input_channels:
+        # Set the bit at position (channel-1)
+        # For example: channel 1 sets bit 0, channel 2 sets bit 1, etc.
+        pattern |= 1 << (channel - 1)
+
+    return pattern

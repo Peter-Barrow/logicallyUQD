@@ -181,28 +181,7 @@ CTimeTag_readTags(CTimeTag_ptr timetag,
     auto ptr = reinterpret_cast<TimeTag::CTimeTag*>(timetag);
     int count = ptr->ReadTags(*channel_ret, *time_ret);
 
-    // printf("Count:\t%d\n", count);
-
-    // int i = 0;
-    // for (i = 0; i < count; i++) {
-    //     printf("ch[%d]\t%llu\n", channel_ret[i], (uint64_t)time_ret[i]);
-    // }
     return count;
-}
-
-void
-CTimeTag_printTags(CTimeTag_ptr timetag,
-                   c_ChannelType* channels,
-                   c_TimeType* timestamps) {
-
-    auto ptr = reinterpret_cast<TimeTag::CTimeTag*>(timetag);
-    int count = ptr->ReadTags(channels, timestamps);
-    printf("Count:\t%d\n", count);
-
-    int i = 0;
-    for (i = 0; i < count; i++) {
-        printf("ch[%d]\t%llu\n", channels[i], (uint64_t)timestamps[i]);
-    }
 }
 
 CLogic_ptr
@@ -216,6 +195,7 @@ void
 CLogic_switchLogicMode(CLogic_ptr logic) {
     auto ptr = reinterpret_cast<TimeTag::CLogic*>(logic);
     ptr->SwitchLogicMode();
+    printf("Switched logic mode on/off\n");
 }
 
 void
