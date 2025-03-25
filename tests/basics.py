@@ -21,7 +21,7 @@ print('numpy read')
 for _ in range(samples):
     sleep(read_time)
     a = perf_counter_ns()
-    (total, channels, timestamps) = uqd.read_tags_numpy()
+    (total, channels, timestamps) = uqd.read_tags()
     b = perf_counter_ns()
     print(total, channels, timestamps)
     # uqd.print_tags()
