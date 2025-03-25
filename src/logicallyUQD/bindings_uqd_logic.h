@@ -103,8 +103,13 @@ CTimeTag_stopTimetags(CTimeTag_ptr timetag);
 
 int
 CTimeTag_readTags(CTimeTag_ptr timetag,
-                  c_ChannelType* channel_ret,
-                  c_TimeType* time_ret);
+                  c_ChannelType** channel_ret,
+                  c_TimeType** time_ret);
+
+void
+CTimeTag_printTags(CTimeTag_ptr timetag,
+                   c_ChannelType* channel_ret,
+                   c_TimeType* time_ret);
 
 // Logic functions
 

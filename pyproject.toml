@@ -1,6 +1,6 @@
 [project]
 name = "logicallyUQD"
-version = "0.2.1"
+version = "0.3.0"
 description = ""
 authors = [
     {name = "Peter Thomas Barrow", email = "peter.barrow.93@gmail.com"}
@@ -20,7 +20,7 @@ requires = ["setuptools", "wheel", "Cython", "numpy"]
 build-backend = "setuptools.build_meta"
 
 [tool.bumpversion]
-current_version = "0.2.1"
+current_version = "0.3.0"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"

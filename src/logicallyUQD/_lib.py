@@ -3,16 +3,14 @@ import time
 from cython.cimports import _lib as _lib
 from cython.cimports.libcpp import bool as cbool
 from typing import List, Tuple
-from cython.cimports.libc.stdint import uint8_t as u8
 from cython.cimports.libc.stdint import uint32_t as u32
-from cython.cimports.libc.stdint import uint64_t as u64
-from numpy import ndarray, zeros, uint8, uint64, float64
+from numpy import ndarray, zeros, uint8, float64, array, int64
 
 from cython.cimports.numpy import (
     PyArray_SimpleNewFromData,
     npy_intp,
     NPY_UINT8,
-    NPY_INT64,
+    NPY_UINT64,
 )
 
 # from cython.cimports import _tangy
@@ -341,9 +339,6 @@ class UQDLogic16:
         Start transmitting timetags from the device to the host computer
         """
 
-        if self._have_buffer is True:
-            self._buffer.clear()
-
         _lib.CTimeTag_startTimetags(self._c_timetag)
 
     def stop_timetags(self):
@@ -353,82 +348,55 @@ class UQDLogic16:
         _lib.CTimeTag_stopTimetags(self._c_timetag)
 
     @cython.ccall
-    def read_tags_naive(self) -> Tuple[int, List[uint8], List[uint64]]:
+    def read_tags(self) -> Tuple[int, ndarray, ndarray]:
+        """
+        Read tags from the device and return them as NumPy arrays
+
+        Returns:
+            Tuple[ndarray, ndarray]: (channels, timestamps) arrays
+        """
+        # Initialize pointers to NULL
+        # channels = cython.declare(cython.pointer(_lib.c_ChannelType))
+        # timestamps = cython.declare(cython.pointer(_lib.c_TimeType))
+
+        # Call ReadTags, which will update our pointers
         count: int = _lib.CTimeTag_readTags(
-            self._c_timetag, self._channel_ptr, self._timetag_ptr
-        )
-        count: int = 10
-        channel_arr: uint8[:] = zeros(count, dtype=uint8)
-        timetag_arr: uint64[:] = zeros(count, dtype=uint64)
-
-        channel_view: u8[:] = channel_arr
-        timetag_view: u64[:] = timetag_arr
-
-        i: cython.Py_ssize_t
-        for i in range(count):
-            channel_view[i] = channel_arr[i]
-            timetag_view[i] = timetag_arr[i]
-
-        return (count, channel_arr, timetag_arr)
-
-    @cython.ccall
-    def read_tags_numpy(self) -> Tuple[int, List[uint8], List[uint64]]:
-        """
-        Write tags directly into buffer
-        """
-        count: int = _lib.CTimeTag_readTags(
-            self._c_timetag, self._channel_ptr, self._timetag_ptr
-        )
-        count = 0
-
-        if count == 0:
-            return count
-
-        # shape: npy_intp[:] = zeros(1, dtype=uint64)
-        shape: npy_intp[1] = [count]
-        # shape[0] = count
-
-        channels = PyArray_SimpleNewFromData(
-            1, cython.address(shape[0]), NPY_UINT8, self._channel_ptr
+            self._c_timetag,
+            cython.address(self._channel_ptr),
+            cython.address(self._timetag_ptr),
         )
 
-        timestamps = PyArray_SimpleNewFromData(
-            1, cython.address(shape[0]), NPY_INT64, self._timetag_ptr
+        if count <= 0:
+            return 0, array([], dtype=uint8), array([], dtype=int64)
+
+        # Create dimensions array for NumPy array creation
+        dims = cython.declare(cython.pointer(npy_intp))
+        dims[0] = count
+
+        # Create NumPy arrays from the data pointers
+        channel_array = PyArray_SimpleNewFromData(
+            1,
+            dims,
+            NPY_UINT8,
+            cython.cast(cython.pointer(cython.void), self._channel_ptr),
         )
 
-        return (count, channels, timestamps)
-
-    @cython.ccall
-    def read_tags_print(self, n_print: int = 10):
-        """
-        Write tags directly into buffer
-        """
-        count: int = _lib.CTimeTag_readTags(
-            self._c_timetag, self._channel_ptr, self._timetag_ptr
-        )
-        count = 0
-
-        if count == 0:
-            return
-
-        # shape: npy_intp[:] = zeros(1, dtype=uint64)
-        shape: npy_intp[1] = [count]
-        # shape[0] = count
-
-        channels = PyArray_SimpleNewFromData(
-            1, cython.address(shape[0]), NPY_UINT8, self._channel_ptr
+        time_array = PyArray_SimpleNewFromData(
+            1,
+            dims,
+            NPY_UINT64,
+            cython.cast(cython.pointer(cython.void), self._timetag_ptr),
         )
 
-        timestamps = PyArray_SimpleNewFromData(
-            1, cython.address(shape[0]), NPY_INT64, self._timetag_ptr
-        )
+        # print(channel_array, time_array)
 
-        n: int = n_print
-        if count < n_print:
-            n = count
-
-        for i in range(n):
-            print(f'Ch[\t{channels[i]}]\t@\t{timestamps[i]}')
+        # Convert to NumPy arrays - use copy=True for safety
+        # return (
+        #     count,
+        #     array(channel_array, copy=True),
+        #     array(time_array, copy=True),
+        # )
+        return (count, channel_array, time_array)
 
     @property
     def filter_min_count(self) -> int:
